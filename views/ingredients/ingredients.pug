@@ -1,0 +1,16 @@
+h3.text-center ¿A que plato deseas agregarle ingredientes?
+table.table.table-striped
+  thead
+    tr
+      th(scope="col") Plato
+      th(scope="col") Categoria
+      th(scope="col")
+  tbody
+    if(data.length)
+      each plato in data
+          tr
+            td
+              a(href=`/agregar-ingrediente/${plato.id}`) #{plato.nombrep}
+            td #{plato.nombrec}
+            td
+              a(href=`/ver-ingredientes/${plato.id}`) Ver ingredientes

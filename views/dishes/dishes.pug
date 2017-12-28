@@ -1,0 +1,42 @@
+h3.text-uppercase.text-center= title
+section.action.col-10
+  div.row
+    div.col-2.text-left
+      a(href="/admin") Inicio
+      //- span.oi.oi-home
+    div.col-2.text-left
+      a(href="/agregar-platos") agregar
+table.table.table-striped
+  thead
+    tr
+      th(scope='col') Nombre
+      th(scope='col') Descripcion
+      th(scope='col') Dificultad
+      th(scope='col') Imagen
+      th(scope='col') Precio
+      th(scope='col') Categoria
+      th
+      th
+  tbody
+    if(data.length)
+      each plato in data
+        tr
+          th(scope='row') #{plato.nombrep}
+          td#texto-corto #{plato.descripcion.slice(0,100) + '...'}
+          td #{plato.dificultad}
+          //td #{plato.foto}
+          td
+            img(src=`images/platos/${plato.foto}`)
+          td #{plato.precio}
+          td #{plato.nombrec}
+          td
+            a(href="/editar-platos/"+plato.id)
+              span.oi.oi-pencil
+          td
+            form(method="post", action="/eliminar-platos/" + plato.id)
+              input(type="hidden", name="_method", value="DELETE")
+              input.button.delete(type="submit", value="Eliminar", onclick="eliminar(this)")
+            //-   span.oi.oi-trash
+    else
+      p No hay registros que mostrar
+  script(src="./alert.js")

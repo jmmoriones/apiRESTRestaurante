@@ -1,0 +1,23 @@
+extends ../layout.pug
+
+block content
+  header.Header
+    div.container
+      div.row
+        article.col-12
+          a.link-style(href="/admin") Inicio
+  section.container
+    div.row
+      article.col-12
+        form(method="POST", action="/agregar-categoria")
+          div.form-group
+            label(for="titulo-categoria") Nombre
+            input#titulo-categoria.form-control(name="nombrec", type="text", placeholder="Platos americanos")
+          div.form-group
+            label(for="descripcion-categoria") Descripcion
+            textarea#descripcion-categoria.form-control(name="descripcion", rows="3", placeholder="Esta receta ....")
+          div.form-group
+            label(for="encargado-categoria") Encargado
+            input#encargado-categoria.form-control(name="nom_encargado", type="text", placeholder="Pepito Perez")
+          button.btn.btn-primary(type="submit") Guardar
+          a.btn.btn-danger(href="/admin") Cancelar

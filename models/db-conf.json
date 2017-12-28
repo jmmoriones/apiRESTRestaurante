@@ -1,0 +1,9 @@
+{
+  "postgrest": {
+    "user": "juan",
+    "host": "localhost",
+    "database": "restaurante",
+    "password": "juan",
+    "port": 5432
+  }
+}

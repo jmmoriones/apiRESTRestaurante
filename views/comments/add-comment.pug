@@ -1,0 +1,23 @@
+extends ../layout.pug
+
+block content
+  Header.Header
+    div.container
+      div.row
+        article.col-12
+          a.link-style(href="/admin") Inicio
+  section.container
+    div.row
+      article.col-12
+        form(method="POST", action="/add-comment", enctype="multipart/form-data")
+          div.form-group
+            label(for="nombre-persona") Nombre
+            input#nombre-persona.form-control(name="nombre", type="text", placeholder="Carlos ....")
+          div.form-group
+            label(for="descripcion-comment") Comentario
+            textarea#descripcion-comment.form-control(name="descripcion", rows="3", placeholder="Los platos ...")
+          div.form-group
+            label(for="foto-persona") Foto de la persona
+            input.form-control-file#foto-persona(type="file", name="foto", accept="image/*")
+          button.btn.btn-primary(type="submit") Guardar
+          a.btn.btn-danger(href="/admin") Cancelar

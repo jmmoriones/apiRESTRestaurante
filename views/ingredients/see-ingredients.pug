@@ -1,0 +1,30 @@
+extends ../layout.pug
+
+block content
+  header.Header
+    div.container
+      div.row
+        article.col-12
+          a.link-style(href="/admin") Inicio
+  section.container
+    div.row
+      article.col-12
+        table.table.table-striped
+          thead
+            tr
+              th Ingrediente
+              th Almacen
+              th Cantidad
+          tbody
+            if(data.length)
+              each d in data
+                tr
+                  td
+                    p #{d.nombrei}
+                  td
+                    p #{d.almacen}
+                  td
+                    p #{d.unidades}
+            else
+              div.error
+                p !!No hay ingredientes, para mostrar
