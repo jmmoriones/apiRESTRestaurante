@@ -54,9 +54,14 @@ class DishesController {
   }
   getOneDishe(req, res, next){
     let id = req.params.id;
-    dm.getOneDishe(id)
+    dm.getOneDishe(id, (err, resQuery) => {
+      if(err)
+        console.log(`Hay un error en la consulta: ${err.message}`)
+      else
+        res.send(resQuery['rows'])
+    })
   }
-  editDishe(req, res, next){
+  editDishes(req, res, next){
     const multer = require('../multer').uploadPlato;
     multer(req, res, function(err){
       let data = {

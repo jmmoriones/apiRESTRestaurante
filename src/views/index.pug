@@ -1,0 +1,25 @@
+extends includes/layout.pug
+block metatags
+  title= title
+  meta(name="description", content=description)
+block content
+  nav.navbar.fixed-left.navbar-light.bg-info
+    ul#menu-ul.nav.flex-column
+      li.nav-item
+        a.text-light(href="/categories") Categorias
+      li.nav-item
+        a.text-light(href="/dishes") Dishes
+      li.nav-item
+        a.text-light(href="/") Comentarios
+      li.nav-item
+        a.text-light(href="/") Eventos
+  section#content-main.content-aside
+    div#categories
+    //form#formCategory
+      input(type="text", placeholder="Categoria", name="nombrec", id="nombrec", required)
+      br
+      textarea(cols="50" rows="10", name="descripcion", id="descripcion", required)
+      br
+      input(type="text", placeholder="Encargado", name="nom_encargado", id="nom_encargado", required)
+      br
+      input#btnSendCategory(type="submit")

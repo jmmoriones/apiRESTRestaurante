@@ -4,6 +4,11 @@ const CategoryModel = require("../models/category_model"),
   cm = new CategoryModel();
 
 class CategoryController {
+  home(req, res, next){
+    res.render('../src/views/index', {
+      title: 'Hola mundo'
+    })
+  }
   lastCategory(req, res, next){
     cm.lastCategory((err, resQuery) => {
       if(err){

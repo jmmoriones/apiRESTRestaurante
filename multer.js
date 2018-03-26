@@ -21,7 +21,6 @@ var uploadPlato = multer({
   }
 }).single('photo')
 
-
 var storageEvento = multer.diskStorage({
   destination: (req, file, callback) =>{
     callback(null, './public/images/eventos')
@@ -41,7 +40,6 @@ var uploadEvento = multer({
     callback(null, true)
   }
 }).single('imagen')
-
 
 var storageComment = multer.diskStorage({
   destination: (req, file, callback) =>{

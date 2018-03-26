@@ -13,20 +13,39 @@ const CategoryController = require('../controllers/category_controller'),
   ec = new EventController(),
   cmc = new CommentController();
 
-router
+router 
+  .get('/categories', (req, res) => {
+    res.render('../src/views/index')
+  })
+  .get('/dishes', (req, res) => {
+    res.render('../src/views/index')
+  })
+  .get('comments', (req, res) => {
+    res.render('../src/views/index')
+  })
+  .get('/events', (req, res) => {
+    res.render('../src/views/index')
+  })
+  .get('/ingredients', (req, res) => {
+    res.render('../src/views/index')
+  })
+  .get('/editando/:id', (req, res) => {
+    res.render('../src/views/index')
+  })
   //Categoria
+  .get('/', cc.home)
   .get('/lastCategories', cc.lastCategory)
-  .get('/category', cc.getCategory)
+  .get('/categoryAll', cc.getCategory)
   .post('/addCategory', cc.addCategory)
   .get('/selectOneCategory/:id', cc.selectOneCategory)
   .put('/editCategory/:id', cc.editCategory)
   .delete('/deleteCategory/:id', cc.deleteCategory)
   //platos
   .get('/lastDishes', dc.lastDishes)
-  .get('/dishes', dc.getDishes)
+  .get('/dishesAll', dc.getDishes)
   .post('/addDishes', dc.addDishes)
   .get('/getOneDishe/:id', dc.getOneDishe)
-  .put('/editDishe/:id', dc.editDishe)
+  .put('/editDishe/:id', dc.editDishes)
   .delete('/deleteDishes/:id', dc.deleteDishes)
   //ingredientes
   .get('/getDishes', ic.getDishes)
