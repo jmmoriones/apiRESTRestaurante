@@ -31,7 +31,7 @@ class DishesController {
         dificultad : req.body.dificultad,
         photo : req.file.filename,
         precio : req.body.precio,
-        categoria : req.body.categoria
+        nombrec : req.body.categoria
       }
       console.log(data)
       dm.addDishes(data, (err, resQuery) => {

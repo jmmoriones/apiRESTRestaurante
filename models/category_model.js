@@ -7,7 +7,7 @@ class CategoryModel {
     client.query('SELECT * FROM categorias ORDER BY nombrec DESC LIMIT 3 OFFSET 0', cb)
   }
   getCategory(cb){
-    client.query('SELECT * FROM categorias ORDER BY nombrec DESC', cb)
+    client.query('SELECT * FROM categorias ORDER BY id DESC', cb)
   }
   addCategory(data, cb){
     client.query('INSERT INTO categorias(nombrec, descripcion, nom_encargado) VALUES (($1), ($2), ($3))', [data.nombrec, data.descripcion, data.nom_encargado], cb)

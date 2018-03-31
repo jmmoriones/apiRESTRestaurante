@@ -1,6 +1,7 @@
-import { d, c } from "../helpers";
+import { d, c, consultaGet, consultaPostToImage, consultaOneData, consultaPutToEdit } from "../helpers";
 import template from "./template";
 import Category from "../category/index";
+import frm_tpl from "./formulario_tpl";
 
 const mainContent = d.querySelector('#content-main'),
   category = new Category()
@@ -16,56 +17,21 @@ export default class Dishes {
     const contentFirst = d.querySelector('#contentFirst'),
       windowModal = d.querySelector('#windowModal'),
       closeModal = d.querySelector("#closeModal")
-    let formulario = (category) => `<h2 class="text-center">Agregando plato</h2>
-      <form id="formDishes" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="nombre-plato">Nombre</label>
-          <input id="nombre-plato" class="form-control" name="nombrep" type="text" placeholder="Platos americanos">
-        </div>
-        <div class="form-group">
-          <label for="nombre-plato">Nombre</label>
-          <textarea id="descripcion-plato" class="form-control" name="descripcion", rows="3", placeholder="Esta receta ...."></textarea>
-        </div>
-        <div class="form-group">
-          <label for="inlineFormCustomSelect" class="mr-sm-2">Dificultad</label>
-          <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect" name="dificultad">
-            <option selected> - - -</option>
-            <option value="1" name="dificultad-1">1</option>
-            <option value="2" name="dificultad-2">2</option>
-            <option value="3" name="dificultad-3">3</option>
-            <option value="4" name="dificultad-4">4</option>
-            <option value="5" name="dificultad-5">5</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="foto-dishes">Foto</label>
-          <input type="file" id="foto-dishes" class="form-control" name="photo" accept="image/*">
-        </div>
-        <div class="form-group">
-          <label id="precio-plato">Plato</label>
-          <input id="precio-plato" class="form-control" name="precio" type="text", placeholder="10.00">
-        </div>
-        <div class="form-group" name="categoria">
-          <select class="form-control">
-            <option selected>- - -</option>
-            ${category.map(c => `
-              <option value="${c.nombrec}">${c.nombrec}</option>`
-            )}
-          </select>
-        </div>
-        <button class="btn btn-primary" type="submit">Guardar</button>
-        <!--<input type="submit" value="send" />-->
-      </form>`
-    if (e.target.id === 'add-dishes') {
-      windowModal.classList.remove('block-or-not')
-      fetch('http://localhost:4000/categoryAll')
-        .then(response => response.json())
-        .then(category => {
-          console.log(category)
-          contentFirst.insertAdjacentHTML('beforeend', formulario(category))
-          const form = document.getElementById("formDishes")
-          form.addEventListener('submit', e => {
 
+    
+    if (e.target.id === 'add-dishes') {
+      e.preventDefault()
+      windowModal.classList.remove('block-or-not')
+
+      category.selectAllCategory()
+        .then(categorys => {
+          contentFirst.insertAdjacentHTML('beforeend', frm_tpl(categorys))
+          const form = document.getElementById("formDishes"),
+            message = d.getElementById('message'),
+            btnSubmitEdit = d.getElementById('inputSave')
+          form.addEventListener('submit', e => {
+            e.preventDefault()
+            c( e )
             const formData = new FormData()
             formData.append('nombrep', e.target[0].value)
             formData.append('descripcion', document.querySelector('#descripcion-plato').value)
@@ -73,16 +39,10 @@ export default class Dishes {
             formData.append( 'photo', e.target[3].files[0], 'logo.png' )
             formData.append('precio', e.target[4].value)
             formData.append('categoria', e.target[5].value)
-
-            fetch('http://localhost:4000/addDishes', {
-              method: 'POST',
-              body : formData
-            })
-              .then(response => {
-                c(response)
-              })
+            consultaPostToImage('http://localhost:4000/addDishes',formData, message)
           })
-        });
+          btnSubmitEdit.style.display = 'none'
+        })      
     }
     closeModal.addEventListener('click', () => {
       contentFirst.innerHTML = ""
@@ -101,54 +61,50 @@ export default class Dishes {
       closeModal = d.querySelector("#closeModal"),
       id = e.target.dataset.id
     if (e.target.id === 'edit-dishes') {
+      e.preventDefault()
       windowModal.classList.remove('block-or-not')
+      category.selectAllCategory()
+        .then(categorys => {
+          contentFirst.insertAdjacentHTML('beforeend', frm_tpl(categorys))
+          const btnAdd = d.getElementById('btnAdd'),
+            btnSubmitEdit = d.getElementById('inputSave')
+          
+          btnSubmitEdit.addEventListener('click', e => {
+            e.preventDefault()
+            const formDishes = d.getElementById('formDishes'),
+              inputs = formDishes.querySelectorAll('[required]'),
+              hid_photo = d.getElementById('hid_photo')
+            c(inputs, hid_photo.value)
+            const formData = new FormData()
+            formData.append('nombrep', inputs[0].value)
+            formData.append('descripcion', inputs[1].value)
+            formData.append('dificultad', inputs[2].value)
+            formData.append('photo', inputs[3].files[0], 'logo.png' )
+            formData.append('precio', inputs[4].value)
+            formData.append('categoria', inputs[5].value)
+            formData.append('id', id)
+            formData.append('imagen_hdn', hid_photo.value)
+            c(consultaPutToEdit('http://localhost:4000/editDishe/', id, formData))
+            
+          })
 
-      let formulario = (dishe) => `<h2 class="text-center">Agregando plato</h2>
-      <form id="formDishes" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="nombre-plato">Nombre</label>
-          <input id="nombre-plato" class="form-control" name="nombrep" type="text" placeholder="Platos americanos" value="${dishe.nombrep}">
-        </div>
-        <div class="form-group">
-          <label for="nombre-plato">Nombre</label>
-          <textarea id="descripcion-plato" class="form-control" name="descripcion", rows="3", placeholder="Esta receta ....">${dishe.descripcion}</textarea>
-        </div>
-        <div class="form-group">
-          <label for="inlineFormCustomSelect" class="mr-sm-2">Dificultad</label>
-          <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect" name="dificultad">
-            <option value="${dishe.dificultad}" selected>${dishe.dificultad}</option>
-            <option value="1" name="dificultad-1">1</option>
-            <option value="2" name="dificultad-2">2</option>
-            <option value="3" name="dificultad-3">3</option>
-            <option value="4" name="dificultad-4">4</option>
-            <option value="5" name="dificultad-5">5</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="foto-dishes">Foto</label>
-          <input type="file" id="foto-dishes" class="form-control" name="photo" accept="image/*">
-          <!--<img src="images/platos/${dishe.foto}" />-->
-        </div>
-        <div class="form-group">
-          <label id="precio-plato">Plato</label>
-          <input id="precio-plato" class="form-control" name="precio" type="text", placeholder="10.00" value="${dishe.precio}">
-        </div>
-        <div class="form-group" name="categoria">
-          <select class="form-control">
-            <option selected>${dishe.nombrec}</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" type="submit">Guardar</button>
-        <!--<input type="submit" value="send" />-->
-      </form>`
-      this.selectOneDishe(id)
-        .then(response => {
-          contentFirst.insertAdjacentHTML('beforeend', formulario(response[0]))
+          btnAdd.style.display = 'none'
         })
-      /*category.selectAllCategory()
-        .then(response => {
-          c(response)
-        })*/
+      consultaOneData('http://localhost:4000/getOneDishe/',id)
+      .then(response => {
+          const formDishes = d.getElementById('formDishes'),
+            inputs = formDishes.querySelectorAll('[required]'),
+            hid_photo = d.getElementById('hid_photo')
+          inputs[0].value = response[0].nombrep
+          inputs[1].value = response[0].descripcion
+          inputs[2].value = response[0].dificultad
+          //inputs[3].files = response[0].foto
+          inputs[4].value = response[0].precio
+          inputs[5].value = response[0].nombrec
+          hid_photo.value = response[0].foto
+
+          c(response, inputs, hid_photo.value)
+        })
     }
     closeModal.addEventListener('click', () => {
       contentFirst.innerHTML = ""
@@ -179,14 +135,37 @@ export default class Dishes {
   }
 
   render () {
-    fetch('http://localhost:4000/dishesAll')
-      .then( response => response.json() )
-      .then(dishes => {
-        console.log( dishes )
-        mainContent.insertAdjacentHTML('beforeend', template(dishes))
-      })
-      .catch(msg => console.log(msg))
-    
+
+    /*async function asyncLoad(ctx){
+      try{
+        ctx.data = await fetch('http://localhost:4000/dishesAll').then(res => res.json())
+      }catch(e){
+        return c(e)
+      }
+    }*/
+    mainContent.insertAdjacentHTML('beforeend', template())
+    let bodyTable = d.getElementById('body-table')
+    let templateHtml = (c) => {
+      return `<article class="card-article">
+        <div class="div1 div-dishes">
+          <figcaption class="content-image">
+            <img src="images/platos/${c.foto}" />
+          </figcaption>
+          <div class="div1-content">
+            <h3 class="article-title">${c.nombrep}</h3>
+            <p class="article-description">${c.descripcion}</p>
+            <span>${c.precio}</span>
+            <span>${c.dificultad}</span>
+          </div>
+        </div>
+        <div class="div2">
+        <button class="btn btn-success" data-id="${c.id}" id="edit-dishes">Editar</button>
+        <button class="btn btn-danger" data-id="${c.id}" id="delete-dishes">Eliminar</button>
+        </div>
+      </article>`
+    }
+    consultaGet('http://localhost:4000/dishesAll', templateHtml, bodyTable)
+
     mainContent.addEventListener('click', this.deleteDishes)
     mainContent.addEventListener('click', this.addDishes)
     mainContent.addEventListener('click', this.editDishes)
